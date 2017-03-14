@@ -353,7 +353,15 @@
         }else{
             self.timeLabel.text = [self.dateFormatter stringFromDate:timeToShow];
         }
-    }else{
+    } else if ([_delegate respondsToSelector:@selector(timerLabel:customAttributedStringToDisplayAtTime:)]) {
+        NSTimeInterval atTime = (_timerType == MZTimerLabelTypeStopWatch) ? timeDiff : ((timeUserValue - timeDiff) < 0 ? 0 : (timeUserValue - timeDiff));
+        NSAttributedString *customAttStr = [_delegate timerLabel:self customAttributedStringToDisplayAtTime:atTime];
+        if ([customAttStr.string length]) {
+            self.timeLabel.attributedText = customAttStr;
+        }else{
+            self.timeLabel.text = [self.dateFormatter stringFromDate:timeToShow];
+        }
+    } else{
         
         if(_shouldCountBeyondHHLimit) {
             //0.4.7 added---start//
